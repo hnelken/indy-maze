@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Defines the project. basedir is where the base directory of the project is, default is the target that gets used when none are specified, and name is the name of the project. -->
+<project basedir="." default="build" name="293hw8">
+	<property environment="env"/>
+	<!-- The below property tags create variables to be used later. -->
+	<property name="junit.output.dir" value="junit"/>
+	<property name="debuglevel" value="source,lines,vars"/>
+	<property name="target" value="1.6"/>
+	<property name="source" value="1.6"/>
+	<property name="src" location="./src"/>
+	<property name="bin" location="./bin"/>
+
+	
+	<path id="JUnit4.libraryclasspath"> <!-- Path information for JUnit jars -->
+		<!-- These locations assume that your JUnit jars are in the same directory as your project. Change them to match where you keep yours. -->
+		<pathelement location="junit.jar"/>
+		<pathelement location="org.hamcrest.core_1.1.0.v20090501071000.jar"/> <!-- Change this if your JUnit is a different version. -->
+	</path>
+
+	<path id="293hw8.classpath"> <!-- Path information for the project's compiled classes -->
+		<pathelement location="bin"/> <!-- Where compiled code goes -->
+		<path refid="JUnit4.libraryclasspath"/> <!-- Includes the JUnit path information in this path -->
+	</path>
+
+	<!-- The parts of these target tags are the commands that get run when those targets are used. -->
+	<target name="clean">
+		<!-- This clears out the bin folder. -->
+		<delete dir="bin"/>
+	</target>
+
+	<target name="build">
+		<mkdir dir="./bin"/>
+		<echo message="${ant.project.name}: ${ant.file}"/> <!-- These variables are filled in by Ant; the former comes from the name field in the project tag, the latter, from the file it's operating on. -->
+		<!-- Builds the main portion of the project -->
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src/"/> <!-- Where the source code is -->
+			<classpath refid="JUnit4.libraryclasspath"/> <!-- Imports JUnit so we can compile JUnit test cases -->
+            <classpath refid="293hw8.classpath"/> 
+        </javac>
+
+        <!-- You can build from multiple directories, in this case, a folder for tests -->
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src/test"/> <!-- Where the tests' source code is -->
+			<classpath refid="JUnit4.libraryclasspath"/>
+            <classpath refid="293hw8.classpath"/> 
+        </javac>
+    </target>
+
+	<target name="test" depends="build"> <!-- Builds the code via the depends feature, and then runs tests -->
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr"> <!-- Runs the tests as a forked process -->
+            <formatter type="plain"/>
+            <batchtest>
+       			<fileset dir="./bin/">
+            		<include name="**/*Test.class" /> <!-- Tells it to use any file in any subfolder of the project, so long as that file's name ends in Test.class -->
+       			</fileset>
+    		</batchtest>
+            <classpath refid="293hw8.classpath"/>
+        </junit>
+    </target>
+</project>
