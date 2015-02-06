@@ -1,6 +1,10 @@
 DOC JONES SHORTEST PATH ALGORITHM - README
 
-Run the ant build file (build.xml), it works.
+Run the ant build file (build.xml).
+
+Algorithm:
+
+Given a matrix of nodes, this finds the shortest path from the bottom right node to the top left node regardless of what nodes are connected. This will be done with the use of a single "plank" that connects two unconnected nodes if it results in a shorter path.
 
 To use the algorithm:
 
